@@ -1,23 +1,27 @@
-const express = require('express')
-const app = express()
-const port = 3000
-const mongoDB = require("./db")
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const port = 2000; 
+const mongoDB = require("./db");
 
+// Connect to DB
 mongoDB();
-app.use((req,res,next)=>{
-    res.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type,Acccept"
-    );
-    next();
-})
 
+// Middleware
+app.use(cors({
+  origin: "http://localhost:3000"
+}));
+app.use(express.json());
+
+// API route
+app.use('/api', require('./routes/CreateUser'));
+
+// Root route
 app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
-app.use(express.json())
-app.use('/api', require("./routes/CreateUser"))
+  res.send('Hello from backend!');
+});
+
+// Start server
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Backend running at http://localhost:${port}`);
+});
