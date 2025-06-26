@@ -9,16 +9,24 @@ const mongoDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("MongoDB connected successfully");
+    console.log("✅ MongoDB connected successfully");
 
-    // Fetching data from "food_items" collection using native MongoDB driver
-    const collection = mongoose.connection.db.collection("food_items");
-    const data = await collection.find({}).toArray();
+    // Fetch data from "food_items"
+    const foodItemsCollection = mongoose.connection.db.collection("food_items");
+    const data = await foodItemsCollection.find({}).toArray();
+
+    // Fetch data from "foodCategory"
+    const categoryCollection = mongoose.connection.db.collection("food_category");
+    const catData = await categoryCollection.find({}).toArray();
+
+    // Store both in global variables
+    global.food_items = data;
+    global.food_category = catData;
+
+    console.log("🌍 Global data loaded");
     
-    console.log(/*"Fetched food_items data:", data*/); // This should now print the data
-
   } catch (err) {
-    console.error("MongoDB connection error or data fetch failed:", err);
+    console.error("❌ MongoDB connection or data fetch failed:", err);
     process.exit(1);
   }
 };

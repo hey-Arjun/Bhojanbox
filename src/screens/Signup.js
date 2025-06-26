@@ -20,7 +20,7 @@ export default function Signup() {
       name: credentials.name,
       email: credentials.email,
       password: credentials.password,
-      address: credentials.geolocation
+      location: credentials.geolocation
     }));
 
     const response = await fetch("http://localhost:2000/api/createuser", {
@@ -32,7 +32,7 @@ export default function Signup() {
         name: credentials.name,
         email: credentials.email,
         password: credentials.password,
-        address: credentials.geolocation
+        location: credentials.geolocation
       })
     });
 

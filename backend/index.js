@@ -14,7 +14,8 @@ app.use(cors({
 app.use(express.json());
 
 // API route
-app.use('/api', require('./routes/CreateUser'));
+app.use('/api', require("./routes/CreateUser"));
+app.use('/api', require("./routes/DisplayData"));
 
 // Root route
 app.get('/', (req, res) => {
