@@ -1,8 +1,26 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default function Navbar() {
+  const [authUser, setAuthUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("authUser");
+    if (storedUser) {
+      setAuthUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("authUser");
+    localStorage.removeItem("authToken");
+    setAuthUser(null);
+    navigate("/"); // Redirect to home
+    window.location.reload(); // Refresh to update navbar
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark sticky-top"
       style={{ background: 'linear-gradient(90deg, #1e3c72, #2a5298)' }}>
@@ -55,7 +73,7 @@ export default function Navbar() {
             </li>
           </ul>
 
-          {/* Right section: Search, Cart, Account */}
+          {/* Right section */}
           <div className="d-flex align-items-center gap-3">
             {/* Search */}
             <div className="input-group">
@@ -68,22 +86,41 @@ export default function Navbar() {
             {/* Cart */}
             <Link to="/cart" className="btn btn-outline-light position-relative">
               <i className="fas fa-shopping-cart"></i>
-              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
+              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                 {/* You can update dynamically later */}
+              </span>
             </Link>
 
-            {/* Account Dropdown */}
-            <div className="dropdown">
-              <button className="btn btn-warning dropdown-toggle fw-bold text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Account
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end">
-                <li><Link className="dropdown-item" to="/login">Login</Link></li>
-                <li><Link className="dropdown-item" to="/signup">Sign Up</Link></li>
-              </ul>
-            </div>
+            {/* Account / Profile Section */}
+            {authUser ? (
+              <>
+                {/* Profile Dropdown */}
+                <div className="dropdown">
+                  <button className="btn btn-warning dropdown-toggle fw-bold text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {authUser.name || "My Account"}
+                  </button>
+                  <ul className="dropdown-menu dropdown-menu-end">
+                    <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
+                    <li><Link className="dropdown-item" to="/Your Orders">Your Orders</Link></li>
+                    <li><Link className="dropdown-item" to="/Sendfeedback">Send feedback</Link></li>
+                    <li><button className="dropdown-item" onClick={handleLogout}>Logout</button></li>
+                  </ul>
+                </div>
+              </>
+            ) : (
+              // Not logged in
+              <div className="dropdown">
+                <button className="btn btn-warning dropdown-toggle fw-bold text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Account
+                </button>
+                <ul className="dropdown-menu dropdown-menu-end">
+                  <li><Link className="dropdown-item" to="/login">Login</Link></li>
+                  <li><Link className="dropdown-item" to="/signup">Sign Up</Link></li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
-
       </div>
     </nav>
   );

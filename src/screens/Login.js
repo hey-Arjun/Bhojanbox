@@ -34,11 +34,21 @@ export default function Login() {
     if (!response.ok || !json.success) {
       alert("Enter valid credentials!");
     } else {
-      // Optional: Save login status
+      // ✅ Save authToken
       localStorage.setItem("authToken", json.authToken);
-      console.log(localStorage.getItem("authToken"))
-      // Redirect to homepage
+
+      // ✅ Save user info (REQUIRED for Navbar)
+      localStorage.setItem("authUser", JSON.stringify({
+        name: json.name,
+        email: credentials.email
+      }));
+
+      // Optional: Toast or alert
+      alert("Login successful!");
+
+      // ✅ Redirect and reload to update Navbar
       navigate("/");
+      window.location.reload();
     }
   };
 

@@ -16,13 +16,18 @@ app.use(express.json());
 // API route
 app.use('/api', require("./routes/CreateUser"));
 app.use('/api', require("./routes/DisplayData"));
+app.use("/api", require("./routes/LoginUser"));
+app.use("/api", require('./routes/Feedback'));
 
 // Root route
 app.get('/', (req, res) => {
   res.send('Hello from backend!');
 });
 
+
 // Start server
 app.listen(port, () => {
   console.log(`Backend running at http://localhost:${port}`);
 });
+
+

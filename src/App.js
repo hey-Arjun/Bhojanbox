@@ -8,6 +8,7 @@ import{
 import Login from './screens/Login';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import Signup from './screens/Signup';
+import Feedback from './screens/Feedback';
 
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
       <Route exact path = "/" element = {<Home/>}/>
       <Route exact path = "/login" element = {<Login/>}/>
       <Route exact path="/signup" element={<Signup />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/Sendfeedback" element={<Feedback />} />
       
     </Routes>
 
@@ -29,7 +32,6 @@ function App() {
 }
 
 export default App;
-
 
 
 
