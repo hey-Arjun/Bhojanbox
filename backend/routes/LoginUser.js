@@ -1,27 +1,34 @@
 const express = require('express');
 const router = express.Router();
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const User = require("../models/User");       // Import User model
+const bcrypt = require("bcryptjs");           // For comparing hashed passwords
+const jwt = require("jsonwebtoken");          // For generating JWT tokens
 
-const jwtSecret = "thisissecrectvalueofbhojanbox"; // 🔒 Replace with environment variable in production
+const jwtSecret = "thisissecrectvalueofbhojanbox"; // 🔐 Store in .env in production
 
-// POST /api/loginuser
+// @route   POST /api/loginuser
+// @desc    Login user and return token + user info
 router.post("/loginuser", async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // ✅ Check if user exists
     const user = await User.findOne({ email });
-    if (!user) return res.json({ success: false, message: "User not found" });
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
 
+    // ✅ Check if password matches
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.json({ success: false, message: "Incorrect password" });
+    if (!isMatch) {
+      return res.json({ success: false, message: "Incorrect password" });
+    }
 
-    // ✅ Create JWT token
+    // ✅ Generate JWT token
     const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: "1d" });
 
-    // Success - send only safe data
-    res.json({
+    // ✅ Send back success with safe user info
+    return res.json({
       success: true,
       authToken: token,
       name: user.name,
@@ -29,9 +36,9 @@ router.post("/loginuser", async (req, res) => {
     });
 
   } catch (err) {
-    console.error(err.message);
+    console.error("Login error:", err.message);
     res.status(500).send("Server Error");
   }
 });
 
-module.exports = router; 
+module.exports = router;

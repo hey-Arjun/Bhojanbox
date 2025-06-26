@@ -69,14 +69,19 @@ router.post(
           .json({ success: false, error: "Invalid email or password" });
       }
       const data = {
-        user:{
-          id:userData.id,
-        }
-      }
-      const authToken = jwt.sign(data, jwtSecret)
-      return res.json({ success: true, authToke:authToken })
+        user: {
+          id: userData.id,
+        },
+      };
+      const authToken = jwt.sign(data, jwtSecret);
+      return res.json({
+        success: true,
+        authToken: authToken,
+        name: userData.name,
+        email: userData.email,
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       res.status(500).json({ success: false, message: "Server error" });
     }
   }
